@@ -48,7 +48,7 @@ pt_root:	.quad ptl4
 .code32
 
 mb_magic = 0x1BADB002
-mb_flags = 0x0
+mb_flags = 0x2
 
 	# multiboot header
 	.long mb_magic, mb_flags, 0 - (mb_magic + mb_flags)
