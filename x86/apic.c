@@ -15,7 +15,7 @@ static void test_lapic_existence(void)
 
     lvr = apic_read(APIC_LVR);
     printf("apic version: %x\n", lvr);
-    report("apic existence", (u16)lvr == 0x14);
+    report("apic existence", (u16)lvr == 16);
 }
 
 #define TSC_DEADLINE_TIMER_VECTOR 0xef
@@ -109,8 +109,12 @@ static void verify_disabled_apic_mmio(void)
     volatile u32 *lvr = (volatile u32 *)(APIC_DEFAULT_PHYS_BASE + APIC_LVR);
     volatile u32 *tpr = (volatile u32 *)(APIC_DEFAULT_PHYS_BASE + APIC_TASKPRI);
     u32 cr8 = read_cr8();
+    void *apic_base = (void *)APIC_DEFAULT_PHYS_BASE;
+    u32 offset;
 
-    memset((void *)APIC_DEFAULT_PHYS_BASE, 0xff, PAGE_SIZE);
+    for (offset = 0; offset < PAGE_SIZE; offset+=16)
+	    *(volatile u64 *)(apic_base + offset) = 0xffffffffffffffff;
+
     report("*0xfee00030: %x", *lvr == ~0, *lvr);
     report("CR8: %lx", read_cr8() == cr8, read_cr8());
     write_cr8(cr8 ^ MAX_TPR);
