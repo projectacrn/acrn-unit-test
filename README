@@ -1,0 +1,3 @@
+This is the unit-test for ACRN project. We have two type of unit-test:
+ - guest side. The unit-test will be run as a ACRN guest
+ - host side. The uni-test will be run at ACRN host side.

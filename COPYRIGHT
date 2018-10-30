@@ -1,0 +1,5 @@
+There are two parts unit-test:
+ - guest based unit test. This is inherited from kvm-unit-test and inherit the kvm-unit-test
+   license.
+ - host base unit test. This is free software and can be redistributed and/or modified under
+   BSD license.
