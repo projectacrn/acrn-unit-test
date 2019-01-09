@@ -35,7 +35,7 @@ KEEP_FRAME_POINTER := y
 
 libgcc := $(shell $(CC) -m$(bits) --print-libgcc-file-name)
 
-# We want to keep intermediate file: %.elf and %.o 
+# We want to keep intermediate file: %.elf and %.o
 .PRECIOUS: %.elf %.o
 
 FLATLIBS = lib/libcflat.a $(libgcc)
@@ -46,6 +46,13 @@ FLATLIBS = lib/libcflat.a $(libgcc)
 
 %.flat: %.elf
 	$(OBJCOPY) -O elf32-i386 $^ $@
+	@chmod a-x $@
+
+%.raw: %.elf
+	$(OBJCOPY) -O binary $^ $@.tmp
+	dd if=/dev/zero of=$@ bs=1 count=$(shell echo $$((0x`readelf -S $< | grep "\.text" | grep -E -o "[0-9a-f]{16}"` - 0x400000)))
+	dd if=$@.tmp of=$@ conv=notrunc oflag=append
+	@rm $@.tmp
 	@chmod a-x $@
 
 tests-common = $(TEST_DIR)/vmexit.flat $(TEST_DIR)/tsc.flat \
