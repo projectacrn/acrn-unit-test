@@ -13,6 +13,9 @@ SECTIONS
     . = ALIGN(16);
     .rodata : { *(.rodata) }
     . = ALIGN(16);
+    .stack : { *(stack) }
+    . = ALIGN(16);
+    bss_start = .;
     .bss : { *(.bss) }
     . = ALIGN(4K);
     edata = .;
