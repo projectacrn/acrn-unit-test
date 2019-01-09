@@ -18,6 +18,7 @@
 #include "processor.h"
 #include "smp.h"
 
+extern char bss_start;
 extern char edata;
 
 struct mbi_bootinfo {
@@ -55,6 +56,8 @@ struct mbi_mem {
 void setup_env(char *env, int size);
 void setup_multiboot(struct mbi_bootinfo *bootinfo);
 void setup_libcflat(void);
+void bss_init(void);
+
 
 char *initrd;
 u32 initrd_size;
@@ -150,6 +153,11 @@ unsigned long setup_tss(u8 *stacktop)
 	return TSS_MAIN + id * 8;
 }
 #endif
+
+void bss_init(void)
+{
+	memset(&bss_start, 0, &edata - &bss_start);
+}
 
 void setup_multiboot(struct mbi_bootinfo *bi)
 {

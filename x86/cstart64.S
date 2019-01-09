@@ -5,7 +5,7 @@ ipi_vector = 0x20
 
 max_cpus = MAX_TEST_CPUS
 
-.bss
+.section stack
 
 	. = . + 4096 * max_cpus
 	.align 16
@@ -104,6 +104,7 @@ gdt32_end:
 
 .code64
 start64:
+	call bss_init
 	call load_idt
 	load_tss
 	call reset_apic
