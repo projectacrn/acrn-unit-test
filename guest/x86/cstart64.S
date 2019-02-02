@@ -148,6 +148,12 @@ switch_to_5level:
 
 prepare_64:
 	lgdt gdt64_desc
+	mov $0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	mov %ax, %ss
 
 enter_long_mode:
 	mov %cr4, %eax
