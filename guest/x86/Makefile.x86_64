@@ -17,7 +17,7 @@ tests += $(TEST_DIR)/syscall.flat
 tests += $(TEST_DIR)/svm.flat
 tests += $(TEST_DIR)/vmx.flat
 tests += $(TEST_DIR)/tscdeadline_latency.flat
-tests += $(TEST_DIR)/intel-iommu.flat
+tests += $(TEST_DIR)/intel_iommu.flat
 tests += $(TEST_DIR)/vmware_backdoors.flat
 
 include $(SRCDIR)/$(TEST_DIR)/Makefile.common
