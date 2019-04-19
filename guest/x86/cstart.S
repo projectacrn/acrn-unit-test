@@ -145,6 +145,12 @@ ap_start32:
 	jmp 1b
 
 start32:
+	mov $0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	mov %ax, %ss
 	call load_tss
 	call mask_pic_interrupts
 	call enable_apic
