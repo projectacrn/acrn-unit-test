@@ -263,6 +263,10 @@ load_tss:
 	shr $24, %eax
 	mov %eax, %ebx
 	shl $4, %ebx
+	movl $0, tss_descr+8(%rbx)
+	movl $0, tss_descr+12(%rbx)
+	movl $0x00008900, tss_descr+4(%rbx)
+	movl $0x0000ffff, tss_descr(%rbx)
 	mov $((tss_end - tss) / max_cpus), %edx
 	imul %edx
 	add $tss, %rax
