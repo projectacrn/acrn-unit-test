@@ -19,6 +19,10 @@ SECTIONS
     .bss : { *(.bss) }
     . = ALIGN(4K);
     edata = .;
+
+    /DISCARD/ : {
+        *(.comment .comment.* .note .note.*)
+    }
 }
 
 ENTRY(start)
