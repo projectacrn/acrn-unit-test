@@ -4,6 +4,7 @@
 *.o
 *.flat
 *.elf
+*.raw
 .pc
 patches
 .stgit-*

@@ -9,6 +9,7 @@
 #include "fwcfg.h"
 #include "alloc_phys.h"
 
+extern char bss_start;
 extern char edata;
 
 struct mbi_bootinfo {
@@ -41,6 +42,11 @@ char *initrd;
 u32 initrd_size;
 
 static char env[ENV_SIZE];
+
+void bss_init(void)
+{
+	memset(&bss_start, 0, &edata - &bss_start);
+}
 
 void setup_multiboot(struct mbi_bootinfo *bootinfo)
 {

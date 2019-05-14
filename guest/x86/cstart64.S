@@ -12,7 +12,7 @@ ipi_vector = 0x20
 
 max_cpus = 64
 
-.bss
+.section stack
 
 	. = . + 4096 * max_cpus
 	.align 16
@@ -148,6 +148,12 @@ switch_to_5level:
 
 prepare_64:
 	lgdt gdt64_desc
+	mov $0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	mov %ax, %ss
 
 enter_long_mode:
 	mov %cr4, %eax
@@ -220,6 +226,7 @@ ap_start64:
 	jmp 1b
 
 start64:
+	call bss_init
 	call load_tss
 	call mask_pic_interrupts
 	call enable_apic
