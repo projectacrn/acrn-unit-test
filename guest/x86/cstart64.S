@@ -2,7 +2,6 @@
 #include "apic-defs.h"
 
 .globl boot_idt
-boot_idt = 0
 
 .globl idt_descr
 .globl tss_descr
@@ -92,6 +91,12 @@ tss:
 i = i + 1
 	.endr
 tss_end:
+boot_idt:
+    .rept 256
+    .quad 0
+    .quad 0
+    .endr
+boot_idt_end:
 
 mb_boot_info:	.quad 0
 
