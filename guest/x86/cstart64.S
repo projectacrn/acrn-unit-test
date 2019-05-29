@@ -91,6 +91,8 @@ tss:
 i = i + 1
 	.endr
 tss_end:
+
+.align 16
 boot_idt:
     .rept 256
     .quad 0
