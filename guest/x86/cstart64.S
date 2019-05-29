@@ -12,7 +12,7 @@ ipi_vector = 0x20
 
 max_cpus = 64
 
-.bss
+.section stack
 
 	. = . + 4096 * max_cpus
 	.align 16
@@ -148,6 +148,12 @@ switch_to_5level:
 
 prepare_64:
 	lgdt gdt64_desc
+	mov $0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	mov %ax, %ss
 
 enter_long_mode:
 	mov %cr4, %eax
@@ -220,6 +226,7 @@ ap_start64:
 	jmp 1b
 
 start64:
+	call bss_init
 	call load_tss
 	call mask_pic_interrupts
 	call enable_apic
@@ -263,6 +270,10 @@ load_tss:
 	shr $24, %eax
 	mov %eax, %ebx
 	shl $4, %ebx
+	movl $0, tss_descr+8(%rbx)
+	movl $0, tss_descr+12(%rbx)
+	movl $0x00008900, tss_descr+4(%rbx)
+	movl $0x0000ffff, tss_descr(%rbx)
 	mov $((tss_end - tss) / max_cpus), %edx
 	imul %edx
 	add $tss, %rax
