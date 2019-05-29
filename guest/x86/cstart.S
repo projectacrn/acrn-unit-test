@@ -67,12 +67,14 @@ tss:
         .endr
 tss_end:
 
+.align 16
 boot_idt:
     .rept 256
     .quad 0
     .quad 0
     .endr
 boot_idt_end:
+
 idt_descr:
 	.word 16 * 256 - 1
 	.long boot_idt
