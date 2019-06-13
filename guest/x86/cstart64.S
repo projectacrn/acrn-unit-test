@@ -1,6 +1,7 @@
 
 #include "apic-defs.h"
 
+.global ap_main
 .globl boot_idt
 boot_idt = 0
 
@@ -221,6 +222,8 @@ ap_start64:
 	sti
 	nop
 	lock incw cpu_online_count
+
+	call ap_main
 
 1:	hlt
 	jmp 1b
