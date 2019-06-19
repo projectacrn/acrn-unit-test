@@ -1,8 +1,9 @@
 
 #include "apic-defs.h"
+.globl rmode_idt
+rmode_idt = 0
 
 .globl boot_idt
-.globl rm_idt_descr
 ipi_vector = 0x20
 
 max_cpus = 64
@@ -79,10 +80,6 @@ idt_descr:
 	.word 16 * 256 - 1
 	.long boot_idt
 	
-rm_idt_descr:
-    .word 4*256 - 1
-    .quad 0
-    
 .section .init
 
 .code32
