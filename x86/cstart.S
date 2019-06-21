@@ -7,13 +7,11 @@ ipi_vector = 0x20
 
 max_cpus = MAX_TEST_CPUS
 
-.bss
+.data
 
 	. = . + 4096 * max_cpus
 	.align 16
 stacktop:
-
-.data
 
 .align 4096
 pt:
@@ -60,7 +58,8 @@ start:
         mov $stacktop, %esp
 
         push %ebx
-        call setup_multiboot
+        call bss_init
+	call setup_multiboot
         addl $4, %esp
         call setup_libcflat
         mov mb_cmdline(%ebx), %eax
