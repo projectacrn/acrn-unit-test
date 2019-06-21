@@ -50,7 +50,7 @@ FLATLIBS = lib/libcflat.a $(libgcc)
 
 %.raw: %.elf
 	$(OBJCOPY) -O binary $^ $@.tmp
-	dd if=/dev/zero of=$@ bs=1 count=$(shell echo $$((0x`readelf -S $< | grep "\.text" | grep -E -o "[0-9a-f]{16}"` - 0x400000)))
+	dd if=/dev/zero of=$@ bs=1 count=$(shell echo $$((0x`readelf -S $< | grep "\.text" | grep -E -o "[0-9a-f]{$$(($(bits)/4))}"` - 0x400000)))
 	dd if=$@.tmp of=$@ conv=notrunc oflag=append
 	@rm $@.tmp
 	@chmod a-x $@
@@ -89,7 +89,7 @@ $(TEST_DIR)/stitched.elf: $(stitched-test-cases:.flat=_prelink.o) $(FLATLIBS) $(
 	@chmod a-x $@
 
 $(TEST_DIR)/%_prelink.o: $(TEST_DIR)/%.o
-	$(LD) -r -o $@ $^
+	$(LD) -m$(ldarch) -r -o $@ $^
 	@$(OBJCOPY) \
 		--keep-global-symbol=main \
 		--add-symbol main_$*=.text:0x`nm $@ | grep "T main" | egrep -o "[0-9a-f]{16}"`,function,global \
