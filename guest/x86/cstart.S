@@ -8,7 +8,7 @@ ipi_vector = 0x20
 
 max_cpus = 64
 
-.bss
+.data
 
 	. = . + 4096 * max_cpus
 	.align 16
@@ -17,8 +17,6 @@ stacktop:
 	. = . + 4096
 	.align 16
 ring0stacktop:
-
-.data
 
 .align 4096
 pt:
@@ -96,6 +94,7 @@ MSR_GS_BASE = 0xc0000101
 start:
         mov $stacktop, %esp
         push %ebx
+        call bss_init
         call setup_multiboot
         call setup_libcflat
         mov mb_cmdline(%ebx), %eax
