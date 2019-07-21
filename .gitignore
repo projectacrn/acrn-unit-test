@@ -5,6 +5,7 @@
 *.flat
 *.elf
 *.raw
+*.bzimage
 .pc
 patches
 .stgit-*

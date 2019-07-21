@@ -101,7 +101,7 @@ all: directories $(shell cd $(SRCDIR) && git rev-parse --verify --short=8 HEAD >
 standalone: all
 	@scripts/mkstandalone.sh
 
-stitched: $(TEST_DIR)/stitched.raw
+stitched: $(TEST_DIR)/stitched.bzimage
 
 install: standalone
 	mkdir -p $(DESTDIR)
