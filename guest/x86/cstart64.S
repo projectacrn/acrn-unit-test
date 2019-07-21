@@ -215,9 +215,8 @@ ap_start32:
 
 .code64
 ap_start64:
-	call load_tss
 	call enable_apic
-	call enable_x2apic
+	call load_tss
 	sti
 	nop
 	lock incw cpu_online_count
@@ -227,11 +226,10 @@ ap_start64:
 
 start64:
 	call bss_init
+	call enable_apic
 	call load_tss
 	call mask_pic_interrupts
-	call enable_apic
 	call smp_init
-	call enable_x2apic
 	mov mb_boot_info(%rip), %rbx
 	mov %rbx, %rdi
 	call setup_multiboot
@@ -265,9 +263,11 @@ idt_descr:
 
 load_tss:
 	lidtq idt_descr
-	mov $(APIC_DEFAULT_PHYS_BASE + APIC_ID), %eax
-	mov (%rax), %eax
-	shr $24, %eax
+
+	movl $APIC_ID, %ecx
+	shrl $4, %ecx
+	addl $APIC_BASE_MSR, %ecx
+	rdmsr
 	mov %eax, %ebx
 	shl $4, %ebx
 	movl $0, tss_descr+8(%rbx)
@@ -294,10 +294,25 @@ smp_init:
 	xor %rdi, %rdi
 	mov $(sipi_end - sipi_entry), %rcx
 	rep/movsb
-	mov $APIC_DEFAULT_PHYS_BASE, %eax
-	movl $(APIC_DEST_ALLBUT | APIC_DEST_PHYSICAL | APIC_DM_INIT | APIC_INT_ASSERT), APIC_ICR(%rax)
-	movl $(APIC_DEST_ALLBUT | APIC_DEST_PHYSICAL | APIC_DM_INIT), APIC_ICR(%rax)
-	movl $(APIC_DEST_ALLBUT | APIC_DEST_PHYSICAL | APIC_DM_STARTUP), APIC_ICR(%rax)
+
+	movl $APIC_ICR, %ecx
+	shrl $4, %ecx
+	addl $APIC_BASE_MSR, %ecx
+
+	call fwcfg_get_nb_cpus
+	movl %eax, %edx
+	subl $1, %edx
+1:
+	movl $(APIC_DEST_PHYSICAL | APIC_DM_INIT | APIC_INT_ASSERT), %eax
+	wrmsr
+	movl $(APIC_DEST_PHYSICAL | APIC_DM_INIT), %eax
+	wrmsr
+	movl $(APIC_DEST_PHYSICAL | APIC_DM_STARTUP), %eax
+	wrmsr
+	subl $1, %edx
+	cmp $0, %edx
+	jnz 1b
+
 	call fwcfg_get_nb_cpus
 1:	pause
 	cmpw %ax, cpu_online_count

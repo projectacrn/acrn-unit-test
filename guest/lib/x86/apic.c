@@ -219,7 +219,12 @@ void set_irq_line(unsigned line, int val)
 void enable_apic(void)
 {
     printf("enabling apic\n");
-    xapic_write(0xf0, 0x1ff); /* spurious vector register */
+    if ((rdmsr(MSR_IA32_APICBASE) & (APIC_EN | APIC_EXTD)) != (APIC_EN | APIC_EXTD)) {
+        enable_x2apic();
+    } else {
+        apic_ops = &x2apic_ops;
+    }
+    apic_write(0xf0, 0x1ff); /* spurious vector register */
 }
 
 void mask_pic_interrupts(void)
