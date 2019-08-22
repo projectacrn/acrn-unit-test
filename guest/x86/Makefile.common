@@ -55,6 +55,12 @@ FLATLIBS = lib/libcflat.a $(libgcc)
 	@rm $@.tmp
 	@chmod a-x $@
 
+x86/bzimage_stub.raw: x86/bzimage_stub.o
+	@$(OBJCOPY) -O binary $^ $@
+
+%.bzimage: %.raw x86/bzimage_stub.raw
+	@scripts/mk_bzimage.py $+ $@
+
 tests-common = $(TEST_DIR)/vmexit.flat $(TEST_DIR)/tsc.flat \
                $(TEST_DIR)/smptest.flat  $(TEST_DIR)/port80.flat \
                $(TEST_DIR)/realmode.flat $(TEST_DIR)/msr.flat \
