@@ -125,3 +125,6 @@ cscope:
 	find -L $(cscope_dirs) -maxdepth 1 \
 		-name '*.[chsS]' -exec realpath --relative-base=$(PWD) {} \; | sort -u > ./cscope.files
 	cscope -bk
+
+unit: all
+	x86/run x86/$(file).flat
