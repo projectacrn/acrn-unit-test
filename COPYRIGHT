@@ -1,5 +1,8 @@
+acrn-unit-test inherits from kvm-unit-tests and will keep kvm-unit-tests license.
+
 Copyright (C) 2006 Qumranet.
 Copyright (C) 2007-2017 by various contributors (see source files for details)
+Copyright (C) 2022 Intel Corporation
 
 The kvm-unit-tests are free software; the whole package can be redistributed
 and/or modified under the terms of the GNU General Public License version 2

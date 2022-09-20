@@ -85,7 +85,8 @@ tests-common = $(TEST_DIR)/vmexit.$(exe) $(TEST_DIR)/tsc.$(exe) \
                $(TEST_DIR)/tsx-ctrl.$(exe) \
                $(TEST_DIR)/eventinj.$(exe) \
                $(TEST_DIR)/smap.$(exe) \
-               $(TEST_DIR)/umip.$(exe)
+               $(TEST_DIR)/umip.$(exe) \
+	       $(TEST_DIR)/hello_acrn.$(exe)
 
 # The following test cases are disabled when building EFI tests because they
 # use absolute addresses in their inline assembly code, which cannot compile
